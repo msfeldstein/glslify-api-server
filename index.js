@@ -1,27 +1,18 @@
-var api        = require('../')(__dirname + '/.cache')
-var browserify = require('browserify')
+var api        = require('glslify-api')('./.cache')
 var http       = require('http')
 var fs         = require('fs')
+var Readable = require('stream').Readable
 
 var port = process.env.PORT || 9006
 
 http.createServer(function(req, res) {
   // index.html
   if (req.url === '/') {
-    res.setHeader('content-type', 'text/html')
-
-    return fs
-      .createReadStream(__dirname + '/index.html')
-      .pipe(res)
-  }
-
-  // browserify bundle
-  if (req.url === '/bundle.js') {
-    res.setHeader('content-type', 'application/javascript')
-
-    return browserify(__dirname + '/client.js')
-      .bundle()
-      .pipe(res)
+    res.setHeader('content-type', 'application/json')
+    var s = new Readable()
+    s.push('{"glslify": true}')
+    s.push(null)
+    return s.pipe(res)
   }
 
   // API routes
