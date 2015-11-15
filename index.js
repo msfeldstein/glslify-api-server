@@ -16,6 +16,7 @@ http.createServer(function(req, res) {
   }
 
   // API routes
+  res.setHeader('Access-Control-Allow-Origin', '*')
   api(req, res, function(err) {
     if (err) {
       res.statusCode = 500
